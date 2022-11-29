@@ -1,11 +1,17 @@
 package main
 
 import (
-	"github.com/Studio56School/University/internal/storage"
+	"github.com/Studio56School/university/internal/storage"
+	"github.com/labstack/echo/v4"
 	"log"
 )
 
 func main() {
+	//   Перенести логику сервера эхо
+	e := echo.New()
+
+	e.Use(echo.MiddlewareFunc())
+
 	db, err := storage.ConnectDB()
 
 	if err != nil {
