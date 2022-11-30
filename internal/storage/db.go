@@ -16,9 +16,9 @@ func ConnectDB() (*pgx.Conn, error) {
 	viper.ReadInConfig()
 
 	connString := "postgres://" +
-		viper.GetString("username") + ":" + viper.GetString("password") +
-		"@" + viper.GetString("host") + ":" + viper.GetString("port") +
-		"/" + viper.GetString("name_db")
+		viper.GetString("db.username") + ":" + viper.GetString("db.password") +
+		"@" + viper.GetString("db.host") + ":" + viper.GetString("db.port") +
+		"/" + viper.GetString("db.name_db")
 
 	conn, err := pgx.Connect(context.Background(), connString)
 	if err != nil {

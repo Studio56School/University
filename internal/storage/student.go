@@ -4,8 +4,12 @@ import (
 	"context"
 	"github.com/Studio56School/university/internal/model"
 	"github.com/jackc/pgx/v5"
+	"github.com/labstack/echo/v4"
 	"log"
+	"net/http"
 )
+
+var DB *pgx.Conn
 
 func StudentbyID(conn *pgx.Conn, id int) error {
 	query := `select id, name, surname from students where id = $1 `
@@ -20,28 +24,35 @@ func StudentbyID(conn *pgx.Conn, id int) error {
 	return nil
 }
 
-func AllStudents(conn *pgx.Conn) error {
-	query := `select id, name, surname from students`
-	rows, err := conn.Query(context.Background(), query)
+//func GetDBInstance() *pgx.Conn {
+//	return DB
+//}
+
+func GetStudents(c echo.Context) error {
+	students, _ := Allstudents()
+	return c.JSON(http.StatusOK, students)
+}
+
+func Allstudents() ([]model.Student, error) {
+	db, _ := ConnectDB()
+	var student model.Student
+	students := make([]model.Student, 0)
+	query := `select id, name, surname, gender from students`
+	rows, err := db.Query(context.Background(), query)
 	if err != nil {
 		log.Println(err)
-		return err
 	}
 
 	for rows.Next() {
-		var id int
-		var name, surname string
-		err := rows.Scan(&id, &name, &surname)
+		err := rows.Scan(&student.Id, &student.Name, &student.Surname, &student.Gender)
 		if err != nil {
-			//log.Println("error while scanning ")
 			log.Println(err)
 		}
-
-		log.Printf("id %d, Name: %s, Surname: %s\n", id, name, surname)
+		students = append(students, student)
 	}
 
 	defer rows.Close()
-	return nil
+	return students, nil
 }
 
 func AddNewStudent(conn *pgx.Conn, student model.Student) error {
