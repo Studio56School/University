@@ -3,13 +3,22 @@ package storage
 import (
 	"context"
 	"github.com/jackc/pgx/v5"
+	"github.com/spf13/viper"
 
 	"log"
 )
-viper
+
 func ConnectDB() (*pgx.Conn, error) {
-	connString := "postgres://dias:1234@127.0.0.1:5432/postgres"
-	//connString  := "postgres:/" + viper.GetString()
+
+	viper.AddConfigPath("./heml/")
+	viper.SetConfigName("config") // Register config file name (no extension)
+	viper.SetConfigType("json")   // Look for specific type
+	viper.ReadInConfig()
+
+	connString := "postgres://" +
+		viper.GetString("username") + ":" + viper.GetString("password") +
+		"@" + viper.GetString("host") + ":" + viper.GetString("port") +
+		"/" + viper.GetString("name_db")
 
 	conn, err := pgx.Connect(context.Background(), connString)
 	if err != nil {

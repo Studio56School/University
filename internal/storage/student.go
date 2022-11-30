@@ -2,7 +2,7 @@ package storage
 
 import (
 	"context"
-	"fmt"
+	"github.com/Studio56School/university/internal/model"
 	"github.com/jackc/pgx/v5"
 	"log"
 )
@@ -37,24 +37,24 @@ func AllStudents(conn *pgx.Conn) error {
 			log.Println(err)
 		}
 
-		fmt.Printf("id %d, Name: %s, Surname: %s\n", id, name, surname)
+		log.Printf("id %d, Name: %s, Surname: %s\n", id, name, surname)
 	}
 
 	defer rows.Close()
 	return nil
 }
 
-func AddNewStudent(conn *pgx.Conn, name string, surname string, gender string) error {
+func AddNewStudent(conn *pgx.Conn, student model.Student) error {
 	query := `INSERT INTO public.students
 	(name, surname, gender)
 	VALUES ($1, $2, $3)`
 
-	_, err := conn.Exec(context.Background(), query, name, surname, gender)
+	_, err := conn.Exec(context.Background(), query, student.Name, student.Surname, student.Gender)
 	if err != nil {
 		log.Println(err)
 	}
 
-	log.Printf("student with Name: %s, Surname: %s inserted  \n", name, surname)
+	log.Printf("student with Name: %s, Surname: %s inserted  \n", student.Name, student.Surname)
 	return nil
 }
 
