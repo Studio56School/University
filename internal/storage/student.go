@@ -2,43 +2,52 @@ package storage
 
 import (
 	"context"
+	"fmt"
 	"github.com/Studio56School/university/internal/model"
 	"github.com/jackc/pgx/v5"
-	"github.com/labstack/echo/v4"
+	"go.uber.org/zap"
 	"log"
-	"net/http"
 )
 
-var DB *pgx.Conn
+func NewRepository(log zap.Logger) (*Repo, error) {
+	pgDB, err := ConnectDB()
+	if err != nil {
+		return nil, err
+	}
 
-func StudentbyID(conn *pgx.Conn, id int) error {
+	return &Repo{l: log, DB: pgDB}, nil
+}
+
+type Repo struct {
+	DB *pgx.Conn
+	l  zap.Logger
+}
+
+type IRepository interface {
+	StudentbyID(conn *pgx.Conn, id int) error
+	Allstudents() ([]model.Student, error)
+	AddNewStudent(student model.Student) error
+}
+
+func (r *Repo) StudentbyID(id int) error {
 	query := `select id, name, surname from students where id = $1 `
 	var name, surname string
-	err := conn.QueryRow(context.Background(), query, id).Scan(&id, &name, &surname)
+	err := r.DB.QueryRow(context.Background(), query, id).Scan(&id, &name, &surname)
 	if err != nil {
-		log.Println(err)
+		r.l.Sugar().Error(fmt.Sprintf("Не отработался запрос студентам по id: %s", err))
 		return err
 	}
 
-	log.Printf("id : %d, Name: %s, Surname: %s\n", id, name, surname)
+	r.l.Sugar().Error(fmt.Sprintf("id : %d, Name: %s, Surname: %s\n", id, name, surname))
 	return nil
 }
 
-//func GetDBInstance() *pgx.Conn {
-//	return DB
-//}
+func (r *Repo) Allstudents() ([]model.Student, error) {
 
-func GetStudents(c echo.Context) error {
-	students, _ := Allstudents()
-	return c.JSON(http.StatusOK, students)
-}
-
-func Allstudents() ([]model.Student, error) {
-	db, _ := ConnectDB()
 	var student model.Student
 	students := make([]model.Student, 0)
 	query := `select id, name, surname, gender from students`
-	rows, err := db.Query(context.Background(), query)
+	rows, err := r.DB.Query(context.Background(), query)
 	if err != nil {
 		log.Println(err)
 	}
@@ -55,12 +64,12 @@ func Allstudents() ([]model.Student, error) {
 	return students, nil
 }
 
-func AddNewStudent(conn *pgx.Conn, student model.Student) error {
+func (r *Repo) AddNewStudent(student model.Student) error {
 	query := `INSERT INTO public.students
 	(name, surname, gender)
 	VALUES ($1, $2, $3)`
 
-	_, err := conn.Exec(context.Background(), query, student.Name, student.Surname, student.Gender)
+	_, err := r.DB.Exec(context.Background(), query, student.Name, student.Surname, student.Gender)
 	if err != nil {
 		log.Println(err)
 	}
