@@ -20,29 +20,29 @@ func NewRepository(log zap.Logger) (*Repo, error) {
 
 type Repo struct {
 	DB *pgx.Conn
-	l  zap.Logger
+	l  zap.Logger //uber library for logging info  or debug or error
 }
 
 type IRepository interface {
-	StudentbyID(conn *pgx.Conn, id int) error
+	StudentByID(id int) (student model.Student, err error)
 	Allstudents() ([]model.Student, error)
 	AddNewStudent(student model.Student) error
 }
 
-func (r *Repo) StudentbyID(id int) error {
+func (r *Repo) StudentByID(id int) (student model.Student, err error) {
 	query := `select id, name, surname from students where id = $1 `
 	var name, surname string
-	err := r.DB.QueryRow(context.Background(), query, id).Scan(&id, &name, &surname)
+	err = r.DB.QueryRow(context.Background(), query, id).Scan(&student.Id, &student.Name, &student.Surname)
 	if err != nil {
 		r.l.Sugar().Error(fmt.Sprintf("Не отработался запрос студентам по id: %s", err))
-		return err
+		return student, err
 	}
 
 	r.l.Sugar().Error(fmt.Sprintf("id : %d, Name: %s, Surname: %s\n", id, name, surname))
-	return nil
+	return student, err
 }
 
-func (r *Repo) Allstudents() ([]model.Student, error) {
+func (r *Repo) Allstudents() (students []model.Student, err error) {
 
 	var student model.Student
 	students := make([]model.Student, 0)

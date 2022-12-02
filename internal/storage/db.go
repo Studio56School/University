@@ -25,6 +25,6 @@ func ConnectDB() (*pgx.Conn, error) {
 		log.Fatal(err)
 	}
 
-	return conn, nil
+	return conn, err
 
 }

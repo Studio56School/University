@@ -18,7 +18,7 @@ func main() {
 	e := echo.New()
 	e = server.RoutesGetStudents()
 	e.Logger.Fatal(e.Start(":1323"))
-	handlers.InitRoutes(e)
+	//handlers.InitRoutes(e)
 
 	//err = storage.StudentbyID(db, 1)
 	//if err != nil {
