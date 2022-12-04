@@ -1,26 +1,25 @@
 package main
 
 import (
-	"github.com/Studio56School/university/internal/server"
+	"github.com/Studio56School/university/internal/handler"
+	"github.com/Studio56School/university/internal/storage"
 	"github.com/labstack/echo/v4"
+	"go.uber.org/zap"
 )
 
 func main() {
-	//db, err := storage.ConnectDB()
-	//
-	//if err != nil {
-	//	log.Fatalf("cannot initialize db ")
-	//}
 
 	//   Перенести логику сервера эхо
+	log := zap.Logger{}
+	repos, err := storage.NewRepository(log)
+	if err != nil {
+		panic(err)
+	}
+
+	handlers := handler.NewHandler(repos)
 
 	e := echo.New()
-	e = server.RoutesGetStudents()
-	e.Logger.Fatal(e.Start(":1323"))
-
-	//err = storage.StudentbyID(db, 1)
-	//if err != nil {
-	//	log.Println(err)
-	//}
+	handlers.InitRoutes(e)
+	e.Logger.Fatal(e.Start(":8080"))
 
 }
