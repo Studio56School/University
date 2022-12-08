@@ -69,15 +69,17 @@ func (h *Handler) CreateStudent(c echo.Context) error {
 	return c.JSON(http.StatusOK, student)
 }
 
-func (h *Handler) updateStudent(c echo.Context) error {
+func (h *Handler) UpdateStudent(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
 	var request model.Student
-	err := c.Bind(&request)
+	err = c.Bind(&request)
+
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": err.Error(),
 		})
 	}
-	student, err := h.repo.UpdateStudent(context.Background(), request)
+	student, err := h.repo.UpdateStudent(context.Background(), request, id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": err.Error(),
@@ -107,6 +109,6 @@ func (h *Handler) InitRoutes(e *echo.Echo) {
 	e.GET("/students", h.GetStudents)
 	e.GET("/students/:id", h.GetStudentsById)
 	e.POST("/students/create", h.CreateStudent)
-	//e.PUT("/users/update", h.updateStudent)
+	e.PUT("/students/update/:id", h.UpdateStudent)
 	e.DELETE("/students/:id", h.DeleteStudent)
 }

@@ -81,25 +81,25 @@ func (r *Repo) AddNewStudent(ctx context.Context, student model.Student) (id int
 	return id, nil
 }
 
-func (r *Repo) UpdateStudent(ctx context.Context, student model.Student) (newStudent model.Student, err error) {
+func (r *Repo) UpdateStudent(ctx context.Context, student model.Student, id int) (model.Student, error) {
 	query := `UPDATE public.students
 	SET name=$2, surname = $3, gender = $4 
 	WHERE id = $1;`
-	err = r.DB.QueryRow(ctx, query, student.Id, student.Name, student.Surname, student.Gender).Scan(&student.Id, &student.Name, &student.Surname, &student.Gender)
+	err := r.DB.QueryRow(ctx, query, id, student.Name, student.Surname, student.Gender).Scan(&student.Id, &student.Name, &student.Surname, &student.Gender)
 	if err != nil {
 		//r.l.Sugar().Error(fmt.Sprintf("Не отработался запрос студентам по id: %s", err))
-		return newStudent, err
+		return student, err
 	}
 
-	newStudent = student // updated student
-
-	return newStudent, err
+	return student, err
 }
 
 func (r *Repo) DeleteStudentById(ctx context.Context, id int) (int int, err error) {
-	query := `DELETE FROM public.students
-	WHERE id = $1 RETURNING id`
+	query := `DELETE FROM students_by_group WHERE student_id = $1`
+	query2 := `	DELETE FROM students WHERE id = $1`
+
 	_, err = r.DB.Exec(ctx, query, id)
+	_, err = r.DB.Exec(ctx, query2, id)
 	if err != nil {
 		//r.l.Sugar().Error(fmt.Sprintf("Не отработался запрос студентам по id: %s", err))
 		return -1, err
