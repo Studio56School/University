@@ -109,6 +109,6 @@ func (h *Handler) InitRoutes(e *echo.Echo) {
 	e.GET("/students", h.GetStudents)
 	e.GET("/students/:id", h.GetStudentsById)
 	e.POST("/students/create", h.CreateStudent)
-	e.PUT("/students/update/:id", h.UpdateStudent)
+	// e.PUT("/students/update/:id", h.UpdateStudent)
 	e.DELETE("/students/:id", h.DeleteStudent)
 }
