@@ -3,19 +3,16 @@ package handler
 import (
 	"context"
 	"github.com/Studio56School/university/internal/model"
+	"github.com/Studio56School/university/internal/service"
 	"github.com/Studio56School/university/internal/storage"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
 )
 
-type Handler struct {
-	repo *storage.Repo
-}
-
-func NewHandler(repo *storage.Repo) *Handler {
-	return &Handler{repo: repo}
-}
+//type Handler struct {
+//	repo *storage.Repo
+//}
 
 type IHandler interface {
 	GetStudents(c echo.Context) error
@@ -24,8 +21,17 @@ type IHandler interface {
 	DeleteStudent(c echo.Context) error
 }
 
+type Handler struct {
+	svc service.IService
+	log *logger.Logger
+}
+
+func NewHandler(repo *storage.Repo) *Handler {
+	return &Handler{repo: repo}
+}
+
 func (h *Handler) GetStudents(c echo.Context) error {
-	students, err := h.repo.AllStudents()
+	students, err := h.svc.AllStudentsService(c.Request().Context())
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": err.Error(),
@@ -103,12 +109,4 @@ func (h *Handler) DeleteStudent(c echo.Context) error {
 		})
 	}
 	return c.JSON(http.StatusOK, student)
-}
-
-func (h *Handler) InitRoutes(e *echo.Echo) {
-	e.GET("/students", h.GetStudents)
-	e.GET("/students/:id", h.GetStudentsById)
-	e.POST("/students/create", h.CreateStudent)
-	// e.PUT("/students/update/:id", h.UpdateStudent)
-	e.DELETE("/students/:id", h.DeleteStudent)
 }

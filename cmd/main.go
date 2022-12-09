@@ -1,25 +1,29 @@
 package main
 
 import (
-	"github.com/Studio56School/university/internal/handler"
-	"github.com/Studio56School/university/internal/storage"
-	"github.com/labstack/echo/v4"
-	"go.uber.org/zap"
+	"github.com/Studio56School/university/internal/server"
+	"log"
+	"time"
 )
 
 func main() {
-
-	//   Перенести логику сервера эхо
-	log := zap.Logger{}
-	repos, err := storage.NewRepository(log)
+	var err error
+	time.Local, err = time.LoadLocation("Asia/Almaty")
 	if err != nil {
-		panic(err)
+		log.Printf("error loading '%s': %v\n", time.Local, err)
 	}
 
-	handlers := handler.NewHandler(repos)
-
-	e := echo.New()
-	handlers.InitRoutes(e)
-	e.Logger.Fatal(e.Start(":8080"))
-
+	logger := logger.NewConsoleLogger(logger.INFO, logger.JSON)
+	conf, err := config.NewAppConfig()
+	if err != nil {
+		log.Fatal("[app] Ошибка при инициализации конфигурации приложения: ", err)
+	}
+	httpServer, err := server.NewServer(conf, logger)
+	if err != nil {
+		log.Fatal("Ошибка при инициализации http сервера: ", err)
+	}
+	err = httpServer.RunBlocking()
+	if err != nil {
+		log.Fatal("Ошибка при запуске http сервера: ", err)
+	}
 }

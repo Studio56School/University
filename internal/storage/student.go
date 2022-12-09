@@ -42,7 +42,7 @@ func (r *Repo) StudentByID(ctx context.Context, id int) (student model.Student, 
 	return student, err
 }
 
-func (r *Repo) AllStudents() (students []model.Student, err error) {
+func (r *Repo) AllStudents(ctx context.Context) (students []model.Student, err error) {
 
 	students = make([]model.Student, 0)
 	query := `select id, name, surname, gender from students`
