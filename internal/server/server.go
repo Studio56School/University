@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/Studio56School/university/internal/config"
+	"github.com/Studio56School/university/internal/logger"
 	"github.com/Studio56School/university/internal/storage"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

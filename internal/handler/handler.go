@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"github.com/Studio56School/university/internal/logger"
 	"github.com/Studio56School/university/internal/model"
 	"github.com/Studio56School/university/internal/service"
 	"github.com/Studio56School/university/internal/storage"
@@ -10,9 +11,11 @@ import (
 	"strconv"
 )
 
-//type Handler struct {
-//	repo *storage.Repo
-//}
+type Handler struct {
+	repo *storage.Repo
+	svc  service.IService
+	log  *logger.Logger
+}
 
 type IHandler interface {
 	GetStudents(c echo.Context) error
@@ -21,16 +24,12 @@ type IHandler interface {
 	DeleteStudent(c echo.Context) error
 }
 
-type Handler struct {
-	svc service.IService
-	log *logger.Logger
-}
-
-func NewHandler(repo *storage.Repo) *Handler {
-	return &Handler{repo: repo}
+func NewHandler(svc service.IService, logger *logger.Logger) *Handler {
+	return &Handler{log: logger, svc: svc}
 }
 
 func (h *Handler) GetStudents(c echo.Context) error {
+
 	students, err := h.svc.AllStudentsService(c.Request().Context())
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -85,13 +84,15 @@ func (h *Handler) UpdateStudent(c echo.Context) error {
 			"message": err.Error(),
 		})
 	}
-	student, err := h.repo.UpdateStudent(context.Background(), request, id)
+
+	err = h.repo.UpdateStudent(context.Background(), request, id)
+
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": err.Error(),
 		})
 	}
-	return c.JSON(http.StatusOK, student)
+	return c.JSON(http.StatusOK, err)
 }
 
 func (h *Handler) DeleteStudent(c echo.Context) error {

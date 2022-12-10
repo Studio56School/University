@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/Studio56School/university/internal/handler"
+	"github.com/Studio56School/university/internal/logger"
 )
 
 type ServerHandlers struct {

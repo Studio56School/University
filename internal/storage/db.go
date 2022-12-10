@@ -2,23 +2,16 @@ package storage
 
 import (
 	"context"
+	"github.com/Studio56School/university/internal/config"
 	"github.com/jackc/pgx/v5"
-	"github.com/spf13/viper"
-
 	"log"
 )
 
-func ConnectDB() (*pgx.Conn, error) {
+func ConnectDB(conf *config.Config) (*pgx.Conn, error) {
 
-	viper.AddConfigPath("./heml/")
-	viper.SetConfigName("config") // Register config file name (no extension)
-	viper.SetConfigType("json")   // Look for specific type
-	viper.ReadInConfig()
-
-	connString := "postgres://" +
-		viper.GetString("db.username") + ":" + viper.GetString("db.password") +
-		"@" + viper.GetString("db.host") + ":" + viper.GetString("db.port") +
-		"/" + viper.GetString("db.name_db")
+	connString := "postgres://" + conf.Username + ":" +
+		conf.Password + "@" + conf.Host + ":" +
+		conf.Port + "/" + conf.DBname
 
 	conn, err := pgx.Connect(context.Background(), connString)
 	if err != nil {

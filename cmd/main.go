@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/Studio56School/university/internal/config"
+	"github.com/Studio56School/university/internal/logger"
 	"github.com/Studio56School/university/internal/server"
 	"log"
 	"time"
