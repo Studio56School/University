@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/Studio56School/university/internal/config"
-	"github.com/Studio56School/university/internal/logger"
 	"github.com/Studio56School/university/internal/server"
+	"go.uber.org/zap"
 	"log"
 	"time"
 )
@@ -15,12 +15,18 @@ func main() {
 		log.Printf("error loading '%s': %v\n", time.Local, err)
 	}
 
-	logger := logger.NewConsoleLogger(logger.INFO, logger.JSON)
+	logger, _ := zap.NewProduction()
+
+	//logger = logger.NewConsoleLogger(logger.INFO, logger.JSON)
+
 	conf, err := config.NewAppConfig()
+
 	if err != nil {
 		log.Fatal("[app] Ошибка при инициализации конфигурации приложения: ", err)
 	}
+
 	httpServer, err := server.NewServer(conf, logger)
+
 	if err != nil {
 		log.Fatal("Ошибка при инициализации http сервера: ", err)
 	}

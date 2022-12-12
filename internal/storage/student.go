@@ -3,18 +3,17 @@ package storage
 import (
 	"context"
 	"github.com/Studio56School/university/internal/config"
-	"github.com/Studio56School/university/internal/logger"
 	"github.com/Studio56School/university/internal/model"
 	"github.com/jackc/pgx/v5"
+	"go.uber.org/zap"
 )
 
-func NewRepository(conf *config.Config, logger *logger.Logger) (*Repo, error) {
+func NewRepository(conf *config.Config, logger *zap.Logger) (*Repo, error) {
 	pgDB, err := ConnectDB(conf)
 	if err != nil {
-		logger.Log.Sugar().Error("Unable to connect")
+		logger.Sugar().Error("Unable to connect")
 		return nil, err
 	}
-
 	return &Repo{DB: pgDB}, nil
 }
 

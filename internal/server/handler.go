@@ -2,14 +2,14 @@ package server
 
 import (
 	"github.com/Studio56School/university/internal/handler"
-	"github.com/Studio56School/university/internal/logger"
+	"go.uber.org/zap"
 )
 
 type ServerHandlers struct {
 	university handler.IHandler
 }
 
-func newHandlers(svc *ServerServices, logger *logger.Logger) (*ServerHandlers, error) {
+func newHandlers(svc *ServerServices, logger *zap.Logger) (*ServerHandlers, error) {
 
 	h := &ServerHandlers{}
 	h.university = handler.NewHandler(svc.Srv, logger)

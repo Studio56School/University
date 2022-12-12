@@ -14,6 +14,7 @@ func ConnectDB(conf *config.Config) (*pgx.Conn, error) {
 		conf.Port + "/" + conf.DBname
 
 	conn, err := pgx.Connect(context.Background(), connString)
+
 	if err != nil {
 		log.Fatal(err)
 	}

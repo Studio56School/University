@@ -1,12 +1,13 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"github.com/Studio56School/university/internal/config"
-	"github.com/Studio56School/university/internal/logger"
 	"github.com/Studio56School/university/internal/storage"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"go.uber.org/zap"
 	"net/http"
 	"os"
 	"os/signal"
@@ -19,14 +20,14 @@ type Server struct {
 	app      *echo.Echo
 	conf     *config.Config
 	quit     chan os.Signal
-	logger   *logger.Logger
+	logger   *zap.Logger
 	created  bool
 	running  bool
 	services *ServerServices
 	handlers *ServerHandlers
 }
 
-func NewServer(conf *config.Config, logger *logger.Logger) (*Server, error) {
+func NewServer(conf *config.Config, logger *zap.Logger) (*Server, error) {
 	var err error
 	serv := &Server{
 		conf:     conf,

@@ -1,5 +1,7 @@
 package config
 
+import "github.com/spf13/viper"
+
 type Config struct {
 	Host     string
 	Port     string
@@ -9,12 +11,14 @@ type Config struct {
 }
 
 func NewAppConfig() (*Config, error) {
+
 	conf := &Config{
-		"db-university.coly66w7nwap.eu-central-1.rds.amazonaws.com",
-		"5432",
-		"postgres",
-		"12345678",
-		"postgres",
+		viper.GetString("db_host"),
+		viper.GetString("db.port"),
+		viper.GetString("db.username"),
+		viper.GetString("db.password"),
+		viper.GetString("db.name_db"),
 	}
+
 	return conf, nil
 }

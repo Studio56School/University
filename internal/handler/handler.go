@@ -2,11 +2,11 @@ package handler
 
 import (
 	"context"
-	"github.com/Studio56School/university/internal/logger"
 	"github.com/Studio56School/university/internal/model"
 	"github.com/Studio56School/university/internal/service"
 	"github.com/Studio56School/university/internal/storage"
 	"github.com/labstack/echo/v4"
+	"go.uber.org/zap"
 	"net/http"
 	"strconv"
 )
@@ -14,7 +14,7 @@ import (
 type Handler struct {
 	repo *storage.Repo
 	svc  service.IService
-	log  *logger.Logger
+	log  *zap.Logger
 }
 
 type IHandler interface {
@@ -24,7 +24,7 @@ type IHandler interface {
 	DeleteStudent(c echo.Context) error
 }
 
-func NewHandler(svc service.IService, logger *logger.Logger) *Handler {
+func NewHandler(svc service.IService, logger *zap.Logger) *Handler {
 	return &Handler{log: logger, svc: svc}
 }
 

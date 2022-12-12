@@ -2,9 +2,9 @@ package server
 
 import (
 	"github.com/Studio56School/university/internal/config"
-	"github.com/Studio56School/university/internal/logger"
 	"github.com/Studio56School/university/internal/service"
 	"github.com/Studio56School/university/internal/storage"
+	"go.uber.org/zap"
 )
 
 // Все сервисы
@@ -13,7 +13,7 @@ type ServerServices struct {
 }
 
 // Создать все сервисы
-func newServices(conf *config.Config, logger *logger.Logger, universityStorage *storage.Repo) (*ServerServices, error) {
+func newServices(conf *config.Config, logger *zap.Logger, universityStorage *storage.Repo) (*ServerServices, error) {
 	// Создаем репозитории
 
 	// Создаем сервисы
