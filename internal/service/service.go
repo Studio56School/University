@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 	"github.com/Studio56School/university/internal/config"
-	"github.com/Studio56School/university/internal/logger"
 	"github.com/Studio56School/university/internal/model"
 	"github.com/Studio56School/university/internal/storage"
+	"go.uber.org/zap"
 )
 
 type IService interface {
@@ -18,11 +18,11 @@ type IService interface {
 
 type Service struct {
 	conf   *config.Config
-	logger *logger.Logger
+	logger *zap.Logger
 	urepo  *storage.Repo
 }
 
-func NewService(conf *config.Config, logger *logger.Logger, urepo *storage.Repo) *Service {
+func NewService(conf *config.Config, logger *zap.Logger, urepo *storage.Repo) *Service {
 	return &Service{conf: conf, logger: logger, urepo: urepo}
 }
 
