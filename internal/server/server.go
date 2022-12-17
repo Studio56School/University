@@ -8,10 +8,12 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/zap"
+	"net/http"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
+	"time"
 )
 
 type Server struct {
@@ -109,24 +111,24 @@ func (s *Server) start(wg *sync.WaitGroup) {
 
 	s.logger.Debug("[http-server] запускаем задачи до старта http сервера...")
 
-	//go func() {
-	//	s.logger.Debug("[http-server] запускаем http сервер...")
+	go func() {
+		s.logger.Debug("[http-server] запускаем http сервер...")
 
-	//timeout, _ := time.ParseDuration(s.conf.Timeout)
-	//srv := &http.Server{
-	//	Addr:         s.conf.Addr,
-	//	ReadTimeout:  timeout,
-	//	WriteTimeout: timeout,
-	//	IdleTimeout:  timeout,
-	//}
-	//
-	//err := s.app.StartServer(srv)
-	//if err != nil {
-	//	s.logger.Debug(fmt.Sprintf("[http-server] останавливаем http сервер: ", err))
-	//	time.Sleep(1 * time.Second)
-	//	s.quit <- syscall.SIGTERM
-	//}
-	//}()
+		timeout, _ := time.ParseDuration(s.conf.Timeout)
+		srv := &http.Server{
+			Addr:         s.conf.Addr,
+			ReadTimeout:  timeout,
+			WriteTimeout: timeout,
+			IdleTimeout:  timeout,
+		}
+
+		err := s.app.StartServer(srv)
+		if err != nil {
+			s.logger.Debug(fmt.Sprintf("[http-server] останавливаем http сервер: ", err))
+			time.Sleep(1 * time.Second)
+			s.quit <- syscall.SIGTERM
+		}
+	}()
 
 	s.running = true
 

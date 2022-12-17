@@ -11,12 +11,14 @@ type Config struct {
 	Username string
 	Password string
 	DBname   string
+	Addr     string
+	Timeout  string
 }
 
 func NewAppConfig() (*Config, error) {
-
+	// path: path=./heml/developers/config.json
 	viper.SetConfigType("json") // Look for specific type
-	filepath := "./heml/config.json"
+	filepath := "./heml/developers/config.json"
 	if os.Getenv("path") != "" {
 		filepath = os.Getenv("path")
 	}
@@ -35,6 +37,8 @@ func NewAppConfig() (*Config, error) {
 		viper.GetString("db.username"),
 		viper.GetString("db.password"),
 		viper.GetString("db.name_db"),
+		":8080",
+		"10",
 	}
 
 	return conf, nil

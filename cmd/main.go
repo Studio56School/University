@@ -1,12 +1,24 @@
 package main
 
 import (
+	_ "github.com/Studio56School/university/docs"
 	"github.com/Studio56School/university/internal/config"
 	"github.com/Studio56School/university/internal/server"
+	_ "github.com/swaggo/swag"
 	"go.uber.org/zap"
 	"log"
 	"time"
 )
+
+//	@title			University app
+//	@version		1.0
+//	@description	This is a sample server of University project
+//	@contact.name	Dias Utekin
+//	@contact.email	dias.utekin@nu.edu.kz
+//	@license.name	Apache 2.0
+//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
+//	@host			localhost:8080
+//	@BasePath		/api/v1
 
 func main() {
 	var err error
