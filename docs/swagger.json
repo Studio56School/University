@@ -1,0 +1,138 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {}
+    },
+    "host": "Пример = localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/students": {
+            "get": {
+                "description": "Get all students",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "students"
+                ],
+                "summary": "GetStudents Get all students",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Student"
+                        }
+                    }
+                }
+            }
+        },
+        "/students/create": {
+            "post": {
+                "description": "Create Student",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "students"
+                ],
+                "summary": "CreateStudent",
+                "operationId": "create-student",
+                "parameters": [
+                    {
+                        "description": "create new student",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Student"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Student"
+                        }
+                    }
+                }
+            }
+        },
+        "/students/{id}": {
+            "get": {
+                "description": "Get student by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "students"
+                ],
+                "summary": "GetStudentsById",
+                "operationId": "get-student",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Student"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete Student",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "students"
+                ],
+                "summary": "DeleteStudent",
+                "operationId": "delete-student",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Student"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.Student": {
+            "type": "object",
+            "properties": {
+                "gender": {
+                    "type": "string",
+                    "example": "gender"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Madina"
+                },
+                "surname": {
+                    "type": "string",
+                    "example": "Akhmetova"
+                }
+            }
+        }
+    }
+}

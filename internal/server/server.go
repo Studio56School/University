@@ -84,10 +84,6 @@ func (s *Server) Setup() error {
 	excludeUrls["/swagger/favicon-32x32.png"] = nil
 	excludeUrls["/swagger/doc.json"] = nil
 
-	//lm := msaMW.NewLoggerMiddleware(s.logger, msaMW.WithExcludeUrls(excludeUrls))
-	//
-	//e.Use(lm.HandleEchoLogger)
-
 	s.routeApiV1(e)
 	s.app = e
 

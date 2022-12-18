@@ -80,7 +80,7 @@ func (r *Repo) AddNewStudent(ctx context.Context, student model.Student) (id int
 	return id, nil
 }
 
-func (r *Repo) UpdateStudent(ctx context.Context, student model.Student, id int) (err error) {
+func (r *Repo) UpdateStudentName(ctx context.Context, student model.Student, id int) (err error) {
 	query := `UPDATE public.students
 	SET name=$2, surname = $3, gender = $4 
 	WHERE id = $1;`

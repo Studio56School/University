@@ -1,0 +1,92 @@
+basePath: /api/v1
+definitions:
+  model.Student:
+    properties:
+      gender:
+        example: gender
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Madina
+        type: string
+      surname:
+        example: Akhmetova
+        type: string
+    type: object
+host: Пример = localhost:8080
+info:
+  contact: {}
+  termsOfService: http://swagger.io/terms/
+paths:
+  /students:
+    get:
+      consumes:
+      - application/json
+      description: Get all students
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Student'
+      summary: GetStudents Get all students
+      tags:
+      - students
+  /students/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Student
+      operationId: delete-student
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Student'
+      summary: DeleteStudent
+      tags:
+      - students
+    get:
+      consumes:
+      - application/json
+      description: Get student by id
+      operationId: get-student
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Student'
+      summary: GetStudentsById
+      tags:
+      - students
+  /students/create:
+    post:
+      consumes:
+      - application/json
+      description: Create Student
+      operationId: create-student
+      parameters:
+      - description: create new student
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Student'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Student'
+      summary: CreateStudent
+      tags:
+      - students
+swagger: "2.0"

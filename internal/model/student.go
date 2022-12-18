@@ -3,9 +3,9 @@ package model
 // Student Group Scheduler
 
 type Student struct {
-	Id      int    `json:"id" db:"id" example:"id"`
-	Name    string `json:"name" db:"name" example:"name"`
-	Surname string `json:"surname" db:"surname" example:"surname"`
+	Id      int    `json:"id" db:"id" example:"1"`
+	Name    string `json:"name" db:"name" example:"Madina"`
+	Surname string `json:"surname" db:"surname" example:"Akhmetova"`
 	Gender  string `json:"gender" db:"gender" example:"gender"`
 }
 

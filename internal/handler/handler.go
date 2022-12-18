@@ -29,19 +29,14 @@ func NewHandler(svc service.IService, logger *zap.Logger) *Handler {
 	return &Handler{log: logger, svc: svc}
 }
 
-//	@Summary		GetStudents
-//	@Description	Get all students
-//	@Tags			students
-//	@ID				get-student
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{object}	model.student
-//	@Failure		400	{object}	errorResponse
-//	@Failure		401	{object}	errorResponse
-//	@Failure		404	{object}	errorResponse
-//	@Failure		500	{object}	errorResponse
-//	@Router			/api/v1/students [get]
-
+// GetStudents godoc
+// @Summary GetStudents Get all students
+// @Description Get all students
+// @Tags students
+// @Accept json
+// @Produce json
+// @Success 200 {object} model.Student
+// @Router /students [get]
 func (h *Handler) GetStudents(c echo.Context) error {
 
 	students, err := h.svc.AllStudentsService(c.Request().Context())
@@ -54,19 +49,14 @@ func (h *Handler) GetStudents(c echo.Context) error {
 	return c.JSON(http.StatusOK, students)
 }
 
-//	@Summary		GetStudentsById
-//	@Description	Get student by id
-//	@Tags			students
-//	@ID				get-student
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{object}	model.student
-//	@Failure		400	{object}	errorResponse
-//	@Failure		401	{object}	errorResponse
-//	@Failure		404	{object}	errorResponse
-//	@Failure		500	{object}	errorResponse
-//	@Router			/api/v1/students/{id} [get]
-
+// @Summary		GetStudentsById
+// @Description	Get student by id
+// @Tags			students
+// @ID				get-student
+// @Accept			json
+// @Produce		json
+// @Success		200	{object}	model.Student
+// @Router			/students/{id} [get]
 func (h *Handler) GetStudentsById(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -84,20 +74,15 @@ func (h *Handler) GetStudentsById(c echo.Context) error {
 	return c.JSON(http.StatusOK, student)
 }
 
-//	@Summary		CreateStudent
-//	@Description	Create Student
-//	@Tags			students
-//	@ID				create-student
-//	@Accept			json
-//	@Produce		json
-//	@Param input body model.student
-//	@Success		200	{object}	model.student
-//	@Failure		400	{object}	errorResponse
-//	@Failure		401	{object}	errorResponse
-//	@Failure		404	{object}	errorResponse
-//	@Failure		500	{object}	errorResponse
-//	@Router			/api/v1/students/create [post]
-
+// @Summary		CreateStudent
+// @Description	Create Student
+// @Tags			students
+// @ID				create-student
+// @Accept			json
+// @Produce		json
+// @Param input body model.Student true "create new student"
+// @Success		200	{object}	model.Student
+// @Router			/students/create [post]
 func (h *Handler) CreateStudent(c echo.Context) error {
 	var request model.Student
 	err := c.Bind(&request)
@@ -136,19 +121,14 @@ func (h *Handler) UpdateStudent(c echo.Context) error {
 	return c.JSON(http.StatusOK, err)
 }
 
-//	@Summary		DeleteStudent
-//	@Description	Delete Student
-//	@Tags			students
-//	@ID				delete-student
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{object}	model.student
-//	@Failure		400	{object}	errorResponse
-//	@Failure		401	{object}	errorResponse
-//	@Failure		404	{object}	errorResponse
-//	@Failure		500	{object}	errorResponse
-//	@Router			/api/v1/students/{id} [delete]
-
+// @Summary		DeleteStudent
+// @Description	Delete Student
+// @Tags			students
+// @ID				delete-student
+// @Accept			json
+// @Produce		json
+// @Success		200	{object}	model.Student
+// @Router			/students/{id} [delete]
 func (h *Handler) DeleteStudent(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 
