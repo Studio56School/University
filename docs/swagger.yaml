@@ -12,7 +12,7 @@ definitions:
         example: Akhmetova
         type: string
     type: object
-host: localhost:8080
+host: ec2-18-192-183-17.eu-central-1.compute.amazonaws.com:8080
 info:
   contact:
     email: dias.utekin@nu.edu.kz
