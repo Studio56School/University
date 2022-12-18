@@ -1,13 +1,10 @@
 basePath: /api/v1
 definitions:
-  model.Student:
+  github_com_Studio56School_university_internal_model.Student:
     properties:
       gender:
-        example: gender
+        example: F
         type: string
-      id:
-        example: 1
-        type: integer
       name:
         example: Madina
         type: string
@@ -15,10 +12,15 @@ definitions:
         example: Akhmetova
         type: string
     type: object
-host: Пример = localhost:8080
+host: localhost:8080
 info:
-  contact: {}
+  contact:
+    email: dias.utekin@nu.edu.kz
+    name: Dias Utekin
+  description: This is a sample server of University project
   termsOfService: http://swagger.io/terms/
+  title: University app
+  version: "1.0"
 paths:
   /students:
     get:
@@ -31,7 +33,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Student'
+            items:
+              $ref: '#/definitions/github_com_Studio56School_university_internal_model.Student'
+            type: array
       summary: GetStudents Get all students
       tags:
       - students
@@ -45,9 +49,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Successful deleted user with id
           schema:
-            $ref: '#/definitions/model.Student'
+            type: string
       summary: DeleteStudent
       tags:
       - students
@@ -62,7 +66,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Student'
+            $ref: '#/definitions/github_com_Studio56School_university_internal_model.Student'
       summary: GetStudentsById
       tags:
       - students
@@ -73,19 +77,19 @@ paths:
       description: Create Student
       operationId: create-student
       parameters:
-      - description: create new student
+      - description: create account
         in: body
         name: input
         required: true
         schema:
-          $ref: '#/definitions/model.Student'
+          $ref: '#/definitions/github_com_Studio56School_university_internal_model.Student'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Student'
+            $ref: '#/definitions/github_com_Studio56School_university_internal_model.Student'
       summary: CreateStudent
       tags:
       - students

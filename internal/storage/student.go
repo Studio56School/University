@@ -22,10 +22,11 @@ type Repo struct {
 }
 
 type IRepository interface {
-	StudentByID(id int) (student model.Student, err error)
-	AllStudents() (students []model.Student, err error)
+	AllStudents(ctx context.Context) (student []model.Student, err error)
+	StudentByID(ctx context.Context, id int) (student model.Student, err error)
 	DeleteStudentById(ctx context.Context, id int) (err error)
-	UpdateStudent(ctx context.Context, student model.Student) (newStudent model.Student, err error)
+	UpdateStudent(ctx context.Context, student model.Student, id int) (err error)
+	AddNewStudent(ctx context.Context, student model.Student) (id int, err error)
 }
 
 func (r *Repo) StudentByID(ctx context.Context, id int) (student model.Student, err error) {
@@ -45,7 +46,7 @@ func (r *Repo) AllStudents(ctx context.Context) (students []model.Student, err e
 
 	students = make([]model.Student, 0)
 	query := `select id, name, surname, gender from students`
-	rows, err := r.DB.Query(context.Background(), query)
+	rows, err := r.DB.Query(ctx, query)
 	if err != nil {
 		//r.l.Sugar().Error(fmt.Sprintf("Не отработался запрос студентам по id: %s", err))
 		return nil, err
@@ -73,14 +74,13 @@ func (r *Repo) AddNewStudent(ctx context.Context, student model.Student) (id int
 
 	err = r.DB.QueryRow(ctx, query, student.Name, student.Surname, student.Gender).Scan(&id)
 	if err != nil {
-		//r.l.Sugar().Error(fmt.Sprintf("Не отработался запрос студентам по id: %s", err))
 		return -1, err
 	}
 
 	return id, nil
 }
 
-func (r *Repo) UpdateStudentName(ctx context.Context, student model.Student, id int) (err error) {
+func (r *Repo) UpdateStudent(ctx context.Context, student model.Student, id int) (err error) {
 	query := `UPDATE public.students
 	SET name=$2, surname = $3, gender = $4 
 	WHERE id = $1;`
@@ -95,7 +95,7 @@ func (r *Repo) UpdateStudentName(ctx context.Context, student model.Student, id 
 
 func (r *Repo) DeleteStudentById(ctx context.Context, id int) (int int, err error) {
 	query := `DELETE FROM students_by_group WHERE student_id = $1`
-	query2 := `	DELETE FROM students WHERE id = $1`
+	query2 := `DELETE FROM students WHERE id = $1`
 
 	_, err = r.DB.Exec(ctx, query, id)
 	_, err = r.DB.Exec(ctx, query2, id)

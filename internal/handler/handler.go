@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"context"
 	_ "github.com/Studio56School/university/docs"
 	"github.com/Studio56School/university/internal/model"
 	"github.com/Studio56School/university/internal/service"
@@ -35,15 +34,13 @@ func NewHandler(svc service.IService, logger *zap.Logger) *Handler {
 // @Tags students
 // @Accept json
 // @Produce json
-// @Success 200 {object} model.Student
+// @Success 200 {object} []model.Student
 // @Router /students [get]
 func (h *Handler) GetStudents(c echo.Context) error {
 
 	students, err := h.svc.AllStudentsService(c.Request().Context())
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": err.Error(),
-		})
+		h.log.Sugar().Error(err)
 	}
 
 	return c.JSON(http.StatusOK, students)
@@ -58,19 +55,17 @@ func (h *Handler) GetStudents(c echo.Context) error {
 // @Success		200	{object}	model.Student
 // @Router			/students/{id} [get]
 func (h *Handler) GetStudentsById(c echo.Context) error {
+
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": err.Error(),
-		})
+		h.log.Sugar().Error(err)
 	}
-	student, err := h.repo.StudentByID(context.Background(), id)
+	student, err := h.svc.StudentByID(c.Request().Context(), id)
 
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": err.Error(),
-		})
+		h.log.Sugar().Error(err)
 	}
+
 	return c.JSON(http.StatusOK, student)
 }
 
@@ -80,45 +75,23 @@ func (h *Handler) GetStudentsById(c echo.Context) error {
 // @ID				create-student
 // @Accept			json
 // @Produce		json
-// @Param input body model.Student true "create new student"
+// @Param input body model.Student true "create account"
 // @Success		200	{object}	model.Student
 // @Router			/students/create [post]
 func (h *Handler) CreateStudent(c echo.Context) error {
 	var request model.Student
 	err := c.Bind(&request)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": err.Error(),
-		})
+		h.log.Sugar().Error(err)
 	}
-	student, err := h.repo.AddNewStudent(context.Background(), request)
+
+	student, err := h.svc.AddNewStudent(c.Request().Context(), request)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": err.Error(),
-		})
+		h.log.Sugar().Error(err)
+
 	}
+
 	return c.JSON(http.StatusOK, student)
-}
-
-func (h *Handler) UpdateStudent(c echo.Context) error {
-	id, err := strconv.Atoi(c.Param("id"))
-	var request model.Student
-	err = c.Bind(&request)
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": err.Error(),
-		})
-	}
-
-	err = h.repo.UpdateStudent(context.Background(), request, id)
-
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": err.Error(),
-		})
-	}
-	return c.JSON(http.StatusOK, err)
 }
 
 // @Summary		DeleteStudent
@@ -127,21 +100,24 @@ func (h *Handler) UpdateStudent(c echo.Context) error {
 // @ID				delete-student
 // @Accept			json
 // @Produce		json
-// @Success		200	{object}	model.Student
+// @Success 200 {string} string "Successful deleted user with id"
 // @Router			/students/{id} [delete]
 func (h *Handler) DeleteStudent(c echo.Context) error {
+
 	id, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": err.Error(),
-		})
+		h.log.Sugar().Error(err)
 	}
-	student, err := h.repo.DeleteStudentById(context.Background(), id)
+
+	err = h.svc.DeleteStudentById(c.Request().Context(), id)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": err.Error(),
-		})
+		h.log.Sugar().Error(err)
 	}
-	return c.JSON(http.StatusOK, student)
+
+	defaultString := "Successful deleted user with id"
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		defaultString: id,
+	})
 }

@@ -11,7 +11,10 @@ const docTemplate = `{
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
         "termsOfService": "http://swagger.io/terms/",
-        "contact": {},
+        "contact": {
+            "name": "Dias Utekin",
+            "email": "dias.utekin@nu.edu.kz"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -34,7 +37,10 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Student"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_Studio56School_university_internal_model.Student"
+                            }
                         }
                     }
                 }
@@ -56,12 +62,12 @@ const docTemplate = `{
                 "operationId": "create-student",
                 "parameters": [
                     {
-                        "description": "create new student",
+                        "description": "create account",
                         "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Student"
+                            "$ref": "#/definitions/github_com_Studio56School_university_internal_model.Student"
                         }
                     }
                 ],
@@ -69,7 +75,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Student"
+                            "$ref": "#/definitions/github_com_Studio56School_university_internal_model.Student"
                         }
                     }
                 }
@@ -93,7 +99,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Student"
+                            "$ref": "#/definitions/github_com_Studio56School_university_internal_model.Student"
                         }
                     }
                 }
@@ -113,9 +119,9 @@ const docTemplate = `{
                 "operationId": "delete-student",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successful deleted user with id",
                         "schema": {
-                            "$ref": "#/definitions/model.Student"
+                            "type": "string"
                         }
                     }
                 }
@@ -123,16 +129,12 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.Student": {
+        "github_com_Studio56School_university_internal_model.Student": {
             "type": "object",
             "properties": {
                 "gender": {
                     "type": "string",
-                    "example": "gender"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
+                    "example": "F"
                 },
                 "name": {
                     "type": "string",
@@ -149,12 +151,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "Пример = localhost:8080",
+	Version:          "1.0",
+	Host:             "localhost:8080",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "University app",
+	Description:      "This is a sample server of University project",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

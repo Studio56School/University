@@ -83,7 +83,7 @@ func (s *Server) Setup() error {
 	excludeUrls["/swagger/swagger-ui-standalone-preset.js"] = nil
 	excludeUrls["/swagger/favicon-32x32.png"] = nil
 	excludeUrls["/swagger/doc.json"] = nil
-
+	s.routeSwagger(e)
 	s.routeApiV1(e)
 	s.app = e
 

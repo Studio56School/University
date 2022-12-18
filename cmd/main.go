@@ -14,7 +14,7 @@ import (
 //	@contact.name	Dias Utekin
 //	@contact.email	dias.utekin@nu.edu.kz
 // @termsOfService http://swagger.io/terms/
-// @host Пример = localhost:8080
+// @host localhost:8080
 // @BasePath /api/v1
 
 func main() {

@@ -1,10 +1,16 @@
 {
     "swagger": "2.0",
     "info": {
+        "description": "This is a sample server of University project",
+        "title": "University app",
         "termsOfService": "http://swagger.io/terms/",
-        "contact": {}
+        "contact": {
+            "name": "Dias Utekin",
+            "email": "dias.utekin@nu.edu.kz"
+        },
+        "version": "1.0"
     },
-    "host": "Пример = localhost:8080",
+    "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
         "/students": {
@@ -24,7 +30,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Student"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_Studio56School_university_internal_model.Student"
+                            }
                         }
                     }
                 }
@@ -46,12 +55,12 @@
                 "operationId": "create-student",
                 "parameters": [
                     {
-                        "description": "create new student",
+                        "description": "create account",
                         "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Student"
+                            "$ref": "#/definitions/github_com_Studio56School_university_internal_model.Student"
                         }
                     }
                 ],
@@ -59,7 +68,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Student"
+                            "$ref": "#/definitions/github_com_Studio56School_university_internal_model.Student"
                         }
                     }
                 }
@@ -83,7 +92,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Student"
+                            "$ref": "#/definitions/github_com_Studio56School_university_internal_model.Student"
                         }
                     }
                 }
@@ -103,9 +112,9 @@
                 "operationId": "delete-student",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successful deleted user with id",
                         "schema": {
-                            "$ref": "#/definitions/model.Student"
+                            "type": "string"
                         }
                     }
                 }
@@ -113,16 +122,12 @@
         }
     },
     "definitions": {
-        "model.Student": {
+        "github_com_Studio56School_university_internal_model.Student": {
             "type": "object",
             "properties": {
                 "gender": {
                     "type": "string",
-                    "example": "gender"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
+                    "example": "F"
                 },
                 "name": {
                     "type": "string",

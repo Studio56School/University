@@ -26,19 +26,6 @@ func NewService(conf *config.Config, logger *zap.Logger, urepo *storage.Repo) *S
 	return &Service{conf: conf, logger: logger, urepo: urepo}
 }
 
-// ShowAccount godoc
-//	@Summary		Show an account
-//	@Description	get string by ID
-//	@Tags			accounts
-//	@Accept			json
-//	@Produce		json
-//	@Param			id	path		int	true	"Account ID"
-//	@Success		200	{object}	model.Account
-//	@Failure		400	{object}	httputil.HTTPError
-//	@Failure		404	{object}	httputil.HTTPError
-//	@Failure		500	{object}	httputil.HTTPError
-//	@Router			/accounts/{id} [get]
-
 func (s *Service) AllStudentsService(ctx context.Context) (student []model.Student, err error) {
 	student, err = s.urepo.AllStudents(ctx)
 
@@ -52,7 +39,7 @@ func (s *Service) StudentByID(ctx context.Context, id int) (student model.Studen
 }
 
 func (s *Service) DeleteStudentById(ctx context.Context, id int) (err error) {
-	_, err = s.urepo.StudentByID(ctx, id)
+	_, err = s.urepo.DeleteStudentById(ctx, id)
 
 	return err
 }

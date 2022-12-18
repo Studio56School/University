@@ -2,11 +2,12 @@ package model
 
 // Student Group Scheduler
 
+// swagger:model Student
 type Student struct {
-	Id      int    `json:"id" db:"id" example:"1"`
+	Id      int    `json:"id,omitempty" db:"id" example:"1" swaggerignore:"true"`
 	Name    string `json:"name" db:"name" example:"Madina"`
 	Surname string `json:"surname" db:"surname" example:"Akhmetova"`
-	Gender  string `json:"gender" db:"gender" example:"gender"`
+	Gender  string `json:"gender" db:"gender" example:"F"`
 }
 
 type Group struct {
