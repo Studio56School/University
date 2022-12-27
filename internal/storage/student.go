@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"fmt"
 	"github.com/Studio56School/university/internal/config"
 	"github.com/Studio56School/university/internal/model"
 	"github.com/jackc/pgx/v5"
@@ -19,14 +20,6 @@ func NewRepository(conf *config.Config, logger *zap.Logger) (*Repo, error) {
 
 type Repo struct {
 	DB *pgx.Conn
-}
-
-type IRepository interface {
-	AllStudents(ctx context.Context) (student []model.Student, err error)
-	StudentByID(ctx context.Context, id int) (student model.Student, err error)
-	DeleteStudentById(ctx context.Context, id int) (err error)
-	UpdateStudent(ctx context.Context, student model.Student, id int) (err error)
-	AddNewStudent(ctx context.Context, student model.Student) (id int, err error)
 }
 
 func (r *Repo) StudentByID(ctx context.Context, id int) (student model.Student, err error) {
@@ -68,6 +61,7 @@ func (r *Repo) AllStudents(ctx context.Context) (students []model.Student, err e
 }
 
 func (r *Repo) AddNewStudent(ctx context.Context, student model.Student) (id int, err error) {
+
 	query := `INSERT INTO public.students
 	(name, surname, gender)
 	VALUES ($1, $2, $3) RETURNING id`
@@ -80,29 +74,53 @@ func (r *Repo) AddNewStudent(ctx context.Context, student model.Student) (id int
 	return id, nil
 }
 
-func (r *Repo) UpdateStudent(ctx context.Context, student model.Student, id int) (err error) {
+func (r *Repo) UpdateStudent(ctx context.Context, student *model.Student) (err error) {
+
+	tx, err := r.DB.BeginTx(ctx, pgx.TxOptions{})
+	if err != nil {
+		return err
+	}
+
 	query := `UPDATE public.students
 	SET name=$2, surname = $3, gender = $4 
 	WHERE id = $1;`
-	err = r.DB.QueryRow(ctx, query, id, student.Name, student.Surname, student.Gender).Scan(&student.Id, &student.Name, &student.Surname, &student.Gender)
+
+	_, err = tx.Exec(ctx, query, student.Id, student.Name, student.Surname, student.Gender)
+
 	if err != nil {
-		//r.l.Sugar().Error(fmt.Sprintf("Не отработался запрос студентам по id: %s", err))
-		return err
+		errTX := tx.Rollback(ctx)
+		if errTX != nil {
+			return fmt.Errorf("ERROR: transaction: %s", errTX)
+		}
+
+		return fmt.Errorf("error occurred while updating students info in users table: %v", err)
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		errTX := tx.Rollback(ctx)
+		if errTX != nil {
+			return fmt.Errorf("ERROR: transaction error: %s", errTX)
+		}
+		return fmt.Errorf("error occurred while updating students info in users table: %v", err)
 	}
 
 	return err
 }
 
-func (r *Repo) DeleteStudentById(ctx context.Context, id int) (int int, err error) {
+func (r *Repo) DeleteStudentById(ctx context.Context, id int64) error {
+
 	query := `DELETE FROM students_by_group WHERE student_id = $1`
 	query2 := `DELETE FROM students WHERE id = $1`
 
-	_, err = r.DB.Exec(ctx, query, id)
-	_, err = r.DB.Exec(ctx, query2, id)
+	rows, err := r.DB.Exec(ctx, query, id)
+	rows, err = r.DB.Exec(ctx, query2, id)
 	if err != nil {
-		//r.l.Sugar().Error(fmt.Sprintf("Не отработался запрос студентам по id: %s", err))
-		return -1, err
+		return fmt.Errorf("error occurred while deleting patient: %v", err)
 	}
+	if rows.RowsAffected() < 1 {
+		return fmt.Errorf("error: no patient in db with such id %d", id)
+	}
+	return nil
 
-	return id, err
 }

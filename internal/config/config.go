@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/spf13/viper"
 	"os"
+	"time"
 )
 
 type Config struct {
@@ -11,8 +12,7 @@ type Config struct {
 	Username string
 	Password string
 	DBname   string
-	Addr     string
-	Timeout  string
+	Timeout  time.Duration
 }
 
 func NewAppConfig() (*Config, error) {
@@ -37,9 +37,7 @@ func NewAppConfig() (*Config, error) {
 		viper.GetString("db.username"),
 		viper.GetString("db.password"),
 		viper.GetString("db.name_db"),
-		":8080",
-		"10",
+		viper.GetDuration("db.Timeout"),
 	}
-
 	return conf, nil
 }
