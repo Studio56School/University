@@ -112,7 +112,7 @@ func (s *Server) start(wg *sync.WaitGroup) {
 
 		timeout, _ := time.ParseDuration(s.conf.Timeout)
 		srv := &http.Server{
-			Addr:         s.conf.Addr,
+			Addr:         ":8080",
 			ReadTimeout:  timeout,
 			WriteTimeout: timeout,
 			IdleTimeout:  timeout,

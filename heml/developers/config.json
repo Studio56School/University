@@ -5,7 +5,7 @@
     "username" : "postgres",
     "host" : "db-university.coly66w7nwap.eu-central-1.rds.amazonaws.com",
     "name_db" : "postgres",
-    "Timeout" : 10
+    "Timeout" : "10"
   }
 
 }

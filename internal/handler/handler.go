@@ -22,6 +22,7 @@ type IHandler interface {
 	GetStudentsById(c echo.Context) error
 	CreateStudent(c echo.Context) error
 	DeleteStudent(c echo.Context) error
+	CreateProfessor(c echo.Context) error
 }
 
 func NewHandler(svc service.IService, logger *zap.Logger) *Handler {
@@ -38,7 +39,7 @@ func NewHandler(svc service.IService, logger *zap.Logger) *Handler {
 // @Router /students [get]
 func (h *Handler) GetStudents(c echo.Context) error {
 
-	students, err := h.svc.AllStudentsService(c.Request().Context())
+	students, err := h.svc.AllStudentsService()
 	if err != nil {
 		h.log.Sugar().Error(err)
 	}
@@ -60,7 +61,7 @@ func (h *Handler) GetStudentsById(c echo.Context) error {
 	if err != nil {
 		h.log.Sugar().Error(err)
 	}
-	student, err := h.svc.StudentByID(c.Request().Context(), id)
+	student, err := h.svc.StudentByID(id)
 
 	if err != nil {
 		h.log.Sugar().Error(err)
@@ -85,7 +86,7 @@ func (h *Handler) CreateStudent(c echo.Context) error {
 		h.log.Sugar().Error(err)
 	}
 
-	student, err := h.svc.AddNewStudent(c.Request().Context(), request)
+	student, err := h.svc.AddNewStudent(request)
 	if err != nil {
 		h.log.Sugar().Error(err)
 
@@ -110,7 +111,7 @@ func (h *Handler) DeleteStudent(c echo.Context) error {
 		h.log.Sugar().Error(err)
 	}
 
-	err = h.svc.DeleteStudentById(c.Request().Context(), id)
+	err = h.svc.DeleteStudentById(id)
 	if err != nil {
 		h.log.Sugar().Error(err)
 	}
@@ -120,4 +121,19 @@ func (h *Handler) DeleteStudent(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		defaultString: id,
 	})
+}
+
+func (h *Handler) CreateProfessor(c echo.Context) error {
+	var request *model.CreateProfessorRequest
+	err := c.Bind(&request)
+	if err != nil {
+		h.log.Sugar().Error(err)
+	}
+
+	professor, err := h.svc.CreateNewProfessorService(request)
+	if err != nil {
+		h.log.Sugar().Error(err)
+	}
+
+	return c.JSON(http.StatusOK, professor)
 }

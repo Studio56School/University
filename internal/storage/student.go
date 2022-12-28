@@ -108,7 +108,7 @@ func (r *Repo) UpdateStudent(ctx context.Context, student *model.Student) (err e
 	return err
 }
 
-func (r *Repo) DeleteStudentById(ctx context.Context, id int64) error {
+func (r *Repo) DeleteStudentById(ctx context.Context, id int) error {
 
 	query := `DELETE FROM students_by_group WHERE student_id = $1`
 	query2 := `DELETE FROM students WHERE id = $1`
@@ -123,4 +123,22 @@ func (r *Repo) DeleteStudentById(ctx context.Context, id int64) error {
 	}
 	return nil
 
+}
+
+func (r *Repo) CreateProfessor(professor *model.CreateProfessorRequest) (*model.CreateProfessorResponse, error) {
+
+	var Id int
+	query := `INSERT INTO public.professors
+	(name, surname, email, degree)
+	VALUES ($1, $2, $3, $4) RETURNING id`
+
+	err := r.DB.QueryRow(context.Background(), query, professor.Name, professor.Surname, professor.Email, professor.Degree).Scan(&Id)
+
+	if err != nil {
+		return nil, fmt.Errorf("error occurred while creating professor in system: %v", err)
+	}
+
+	return &model.CreateProfessorResponse{
+		Id: Id,
+	}, nil
 }

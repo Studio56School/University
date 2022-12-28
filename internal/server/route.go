@@ -11,6 +11,7 @@ func (s *Server) routeApiV1(r *echo.Echo) {
 	apiv1.GET("/students/:id", s.handlers.university.GetStudentsById)
 	apiv1.POST("/students/create", s.handlers.university.CreateStudent)
 	apiv1.DELETE("/students/:id", s.handlers.university.DeleteStudent)
+	apiv1.POST("/professor/create", s.handlers.university.CreateProfessor)
 
 }
 
