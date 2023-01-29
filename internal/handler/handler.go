@@ -23,6 +23,9 @@ type IHandler interface {
 	CreateStudent(c echo.Context) error
 	DeleteStudent(c echo.Context) error
 	CreateProfessor(c echo.Context) error
+	SignUp(c echo.Context) error
+	SignIn(c echo.Context) error
+	UserIdentity() echo.HandlerFunc
 }
 
 func NewHandler(svc service.IService, logger *zap.Logger) *Handler {
