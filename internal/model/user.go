@@ -1,5 +1,6 @@
 package model
 
+// struct for auth
 type User struct {
 	Id       int    `json:"id" db:"id" binding:"required"`
 	Name     string `json:"name" db:"name" binding:"required"`

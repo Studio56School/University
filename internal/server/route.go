@@ -18,7 +18,7 @@ func (s *Server) routeApiV1(r *echo.Echo) {
 	// чтоб перейти нужно передавать bearer token in authorization
 	// ошибка Cannot use 's.handlers.university.UserIdentity' (type func() echo.HandlerFunc) as the type MiddlewareFunc
 
-	apiv1 := r.Group("/api/v1/", s.handlers.university.UserIdentity)
+	apiv1 := r.Group("/api/v1", s.handlers.university.UserIdentity)
 	{
 		apiv1.GET("/students", s.handlers.university.GetStudents)
 		apiv1.GET("/students/:id", s.handlers.university.GetStudentsById)

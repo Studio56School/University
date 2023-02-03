@@ -12,7 +12,7 @@ const (
 	username            = "name"
 )
 
-func (h *Handler) UserIdentity() echo.HandlerFunc {
+func (h *Handler) UserIdentity(next echo.HandlerFunc) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 
@@ -36,7 +36,7 @@ func (h *Handler) UserIdentity() echo.HandlerFunc {
 
 		c.Set(userCtx, userId)
 
-		return nil
+		return next(c)
 
 	}
 

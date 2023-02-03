@@ -25,7 +25,7 @@ type IHandler interface {
 	CreateProfessor(c echo.Context) error
 	SignUp(c echo.Context) error
 	SignIn(c echo.Context) error
-	UserIdentity() echo.HandlerFunc
+	UserIdentity(next echo.HandlerFunc) echo.HandlerFunc
 }
 
 func NewHandler(svc service.IService, logger *zap.Logger) *Handler {
@@ -42,12 +42,16 @@ func NewHandler(svc service.IService, logger *zap.Logger) *Handler {
 // @Router /students [get]
 func (h *Handler) GetStudents(c echo.Context) error {
 
-	students, err := h.svc.AllStudentsService()
-	if err != nil {
-		h.log.Sugar().Error(err)
-	}
+	id := c.Get(userCtx)
 
-	return c.JSON(http.StatusOK, students)
+	//students, err := h.svc.AllStudentsService()
+	//if err != nil {
+	//	h.log.Sugar().Error(err)
+	//}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"id": id,
+	})
 }
 
 // @Summary		GetStudentsById
